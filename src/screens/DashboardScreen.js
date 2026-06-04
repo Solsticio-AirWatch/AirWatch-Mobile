@@ -6,8 +6,10 @@ import {
 import { airReadingService, cityService, openAQService } from '../services/api';
 import { AirCard, SectionTitle, AirBadge, EmptyState } from '../components';
 import { colors, spacing, radius, getAqiInfo } from '../theme';
+import { usePermissions } from '../../App';
 
 export default function DashboardScreen({ navigation }) {
+  const { canWrite, isCitizen } = usePermissions();
   const [cities,    setCities]    = useState([]);
   const [selected,  setSelected]  = useState(null);
   const [readings,  setReadings]  = useState([]);
@@ -122,23 +124,27 @@ export default function DashboardScreen({ navigation }) {
             }
           </AirCard>
 
-          {/* Atalhos */}
+          {/* Atalhos — visíveis conforme role */}
           <View style={styles.shortcutRow}>
             <TouchableOpacity style={styles.shortcut}
               onPress={() => navigation.navigate('AirReadings', { city: selected })} activeOpacity={0.8}>
               <Text style={styles.shortcutEmoji}>📈</Text>
               <Text style={styles.shortcutLabel}>Leituras</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.shortcut}
-              onPress={() => navigation.navigate('Sensors', { city: selected })} activeOpacity={0.8}>
-              <Text style={styles.shortcutEmoji}>📡</Text>
-              <Text style={styles.shortcutLabel}>Sensores</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.shortcut}
-              onPress={() => navigation.navigate('AlertEvents', { city: selected })} activeOpacity={0.8}>
-              <Text style={styles.shortcutEmoji}>⚠️</Text>
-              <Text style={styles.shortcutLabel}>Alertas</Text>
-            </TouchableOpacity>
+            {canWrite && (
+              <TouchableOpacity style={styles.shortcut}
+                onPress={() => navigation.navigate('Sensors', { city: selected })} activeOpacity={0.8}>
+                <Text style={styles.shortcutEmoji}>📡</Text>
+                <Text style={styles.shortcutLabel}>Sensores</Text>
+              </TouchableOpacity>
+            )}
+            {canWrite && (
+              <TouchableOpacity style={styles.shortcut}
+                onPress={() => navigation.navigate('AlertEvents', { city: selected })} activeOpacity={0.8}>
+                <Text style={styles.shortcutEmoji}>⚠️</Text>
+                <Text style={styles.shortcutLabel}>Alertas</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </>
       )}
