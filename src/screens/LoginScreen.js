@@ -21,18 +21,19 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleLogin = async () => {
-    if (!validate()) return;
-    try {
-      setLoading(true);
-      const res = await authService.login({ email: email.trim(), password });
-      setAuthToken(res.token);
-      await login(res.token, { email: res.email, role: res.role });
-    } catch (err) {
-      Alert.alert('Falha no login', err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!validate()) return;
+  try {
+    setLoading(true);
+    const res = await authService.login({ email: email.trim(), password });
+    setAuthToken(res.token);
+    await login(res.token, { email: res.email, role: res.role });
+  } catch (err) {
+    console.log('LOGIN ERROR:', JSON.stringify(err.message));
+    Alert.alert('Falha no login', err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
