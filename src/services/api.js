@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://SEU_IP:8080';
+export const BASE_URL = 'https://airwatch-api.onrender.com';
 
 let _token = null;
 export const setAuthToken = (t) => { _token = t; };
@@ -30,9 +30,20 @@ const page = async (method, path, body = null) => {
 };
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
+const extractLoginResponse = (data) => {
+  const token = data?.token ?? data?.accessToken ?? data?.access_token ?? null;
+  const email = data?.email ?? data?.username ?? null;
+  const role  = data?.role  ?? data?.roles?.[0] ?? null;
+  if (!token) throw new Error('Token não encontrado na resposta do servidor');
+  return { token, email, role };
+};
+
 export const authService = {
   register: (data) => req('POST', 'api/auth/register', data),
-  login:    (data) => req('POST', 'api/auth/login',    data),
+  login: async (data) => {
+    const res = await req('POST', 'api/auth/login', data);
+    return extractLoginResponse(res);
+  },
 };
 
 // ─── Users ────────────────────────────────────────────────────────────────────
