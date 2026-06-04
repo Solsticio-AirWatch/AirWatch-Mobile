@@ -5,7 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { AirInput, AirButton, AirCard, SectionTitle } from '../components';
 import { colors, spacing, radius } from '../theme';
 
-const ROLES = ['USER', 'ADMIN', 'ANALYST'];
+const ROLES = ['CITIZEN', 'MANAGER', 'TECHNICIAN'];
+
 
 export default function RegisterScreen({ navigation }) {
   const { login } = useAuth();
@@ -28,19 +29,25 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const handleRegister = async () => {
-    if (!validate()) return;
-    try {
-      setLoading(true);
-      await authService.register({ name: name.trim(), email: email.trim(), password, phone: phone.trim() || null, role });
-      const res = await authService.login({ email: email.trim(), password });
-      setAuthToken(res.token);
-      await login(res.token, { email: res.email, role: res.role });
-    } catch (err) {
-      Alert.alert('Erro ao cadastrar', err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!validate()) return;
+  try {
+    setLoading(true);
+    const registerRes = await authService.register({
+      name: name.trim(), email: email.trim(),
+      password, phone: phone.trim() || null, role,
+    });
+    console.log('REGISTER RESPONSE:', JSON.stringify(registerRes));
+    const res = await authService.login({ email: email.trim(), password });
+    console.log('LOGIN RESPONSE:', JSON.stringify(res));
+    setAuthToken(res.token);
+    await login(res.token, { email: res.email, role: res.role });
+  } catch (err) {
+    console.log('REGISTER ERROR:', JSON.stringify(err.message));
+    Alert.alert('Erro ao cadastrar', err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
