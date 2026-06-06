@@ -8,19 +8,16 @@ export default function RegisterScreen({ navigation }) {
   const [name,     setName]     = useState('');
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
-  const [confirm,  setConfirm]  = useState('');
   const [loading,  setLoading]  = useState(false);
   const [errors,   setErrors]   = useState({});
 
   const validate = () => {
     const e = {};
-    if (!name.trim())               e.name     = 'Nome obrigatório';
-    if (!email.trim())              e.email    = 'E-mail obrigatório';
-    else if (!email.includes('@'))  e.email    = 'E-mail inválido';
-    if (!password.trim())           e.password = 'Senha obrigatória';
-    else if (password.length < 6)   e.password = 'Mínimo 6 caracteres';
-    if (!confirm.trim())            e.confirm  = 'Confirme a senha';
-    else if (confirm !== password)  e.confirm  = 'As senhas não coincidem';
+    if (!name.trim())              e.name     = 'Nome obrigatório';
+    if (!email.trim())             e.email    = 'E-mail obrigatório';
+    else if (!email.includes('@')) e.email    = 'E-mail inválido';
+    if (!password.trim())          e.password = 'Senha obrigatória';
+    else if (password.length < 6)  e.password = 'Mínimo 6 caracteres';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -44,55 +41,23 @@ export default function RegisterScreen({ navigation }) {
     <KeyboardAvoidingView style={s.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
         <Text style={s.title}>Criar Conta</Text>
-        <Text style={s.subtitle}>Preencha os dados para se cadastrar na plataforma</Text>
+        <Text style={s.subtitle}>Preencha os dados para se cadastrar</Text>
 
         <View style={s.form}>
-          <AirInput
-            label="Nome completo"
-            value={name}
-            onChangeText={setName}
-            placeholder="Seu nome"
-            autoCapitalize="words"
-            error={errors.name}
-          />
-          <AirInput
-            label="E-mail"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="seu@email.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            error={errors.email}
-          />
-          <AirInput
-            label="Senha"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Mínimo 6 caracteres"
-            secureTextEntry
-            error={errors.password}
-          />
-          <AirInput
-            label="Confirmar Senha"
-            value={confirm}
-            onChangeText={setConfirm}
-            placeholder="Repita a senha"
-            secureTextEntry
-            error={errors.confirm}
-          />
-          <AirButton
-            title="CRIAR CONTA"
-            onPress={handleRegister}
-            loading={loading}
-            style={{ marginTop: spacing.sm }}
-          />
+          <AirInput label="Nome completo" value={name} onChangeText={setName}
+            placeholder="Seu nome" autoCapitalize="words" error={errors.name} />
+          <AirInput label="E-mail" value={email} onChangeText={setEmail}
+            placeholder="seu@email.com" keyboardType="email-address"
+            autoCapitalize="none" error={errors.email} />
+          <AirInput label="Senha" value={password} onChangeText={setPassword}
+            placeholder="Mínimo 6 caracteres" secureTextEntry error={errors.password} />
+          <AirButton title="CRIAR CONTA" onPress={handleRegister} loading={loading}
+            style={{ marginTop: spacing.sm }} />
         </View>
 
         <Text style={s.loginLink}>
           Já tem conta?{' '}
-          <Text style={s.loginLinkBold} onPress={() => navigation.navigate('Login')}>
-            Entrar
-          </Text>
+          <Text style={s.loginLinkBold} onPress={() => navigation.navigate('Login')}>Entrar</Text>
         </Text>
       </ScrollView>
     </KeyboardAvoidingView>
