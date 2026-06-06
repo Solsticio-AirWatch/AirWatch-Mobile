@@ -23,13 +23,11 @@ const req = async (method, path, body = null) => {
   return res.json();
 };
 
-// Paginação — extrai array do campo 'content' do Page do Spring
 const page = async (method, path, body = null) => {
   const data = await req(method, path, body);
   return Array.isArray(data?.content) ? data.content : (Array.isArray(data) ? data : []);
 };
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
 const extractLoginResponse = (data) => {
   const token = data?.token ?? data?.accessToken ?? data?.access_token ?? null;
   const email = data?.email ?? data?.username ?? null;
@@ -46,7 +44,6 @@ export const authService = {
   },
 };
 
-// ─── Users ────────────────────────────────────────────────────────────────────
 export const userService = {
   getAll:  ()         => page('GET', 'api/users?size=100'),
   getById: (id)       => req('GET',  `api/users/${id}`),
@@ -54,7 +51,6 @@ export const userService = {
   delete:  (id)       => req('DELETE',`api/users/${id}`),
 };
 
-// ─── Countries ────────────────────────────────────────────────────────────────
 export const countryService = {
   getAll:  ()         => page('GET',   'api/countries?size=100'),
   getById: (id)       => req('GET',    `api/countries/${id}`),
@@ -63,7 +59,6 @@ export const countryService = {
   delete:  (id)       => req('DELETE', `api/countries/${id}`),
 };
 
-// ─── Cities ───────────────────────────────────────────────────────────────────
 export const cityService = {
   getAll:         ()         => page('GET',   'api/cities?size=100'),
   getById:        (id)       => req('GET',    `api/cities/${id}`),
@@ -73,7 +68,6 @@ export const cityService = {
   delete:         (id)       => req('DELETE', `api/cities/${id}`),
 };
 
-// ─── Sensors ──────────────────────────────────────────────────────────────────
 export const sensorService = {
   getAll:      ()         => page('GET',   'api/sensors?size=100'),
   getById:     (id)       => req('GET',    `api/sensors/${id}`),
@@ -83,7 +77,6 @@ export const sensorService = {
   delete:      (id)       => req('DELETE', `api/sensors/${id}`),
 };
 
-// ─── Air Readings ─────────────────────────────────────────────────────────────
 export const airReadingService = {
   getAll:    ()         => page('GET',   'api/air-readings?size=50'),
   getById:   (id)       => req('GET',    `api/air-readings/${id}`),
@@ -92,7 +85,6 @@ export const airReadingService = {
   delete:    (id)       => req('DELETE', `api/air-readings/${id}`),
 };
 
-// ─── Alert Configs ────────────────────────────────────────────────────────────
 export const alertConfigService = {
   getAll:      ()         => page('GET',   'api/alert-configs?size=100'),
   getById:     (id)       => req('GET',    `api/alert-configs/${id}`),
@@ -104,7 +96,6 @@ export const alertConfigService = {
   delete:      (id)       => req('DELETE', `api/alert-configs/${id}`),
 };
 
-// ─── Alert Events ─────────────────────────────────────────────────────────────
 export const alertEventService = {
   getAll:       ()       => page('GET',  'api/alert-events?size=50'),
   getById:      (id)     => req('GET',   `api/alert-events/${id}`),
@@ -117,7 +108,6 @@ export const alertEventService = {
   delete:       (id)     => req('DELETE',`api/alert-events/${id}`),
 };
 
-// ─── OpenAQ (externa) ─────────────────────────────────────────────────────────
 export const openAQService = {
   fetchByCity: async (cityName) => {
     const url = `https://api.openaq.org/v3/locations?limit=3&country_id=BR&city=${encodeURIComponent(cityName)}`;
