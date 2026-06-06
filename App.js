@@ -4,7 +4,6 @@ import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import { setAuthToken } from './src/services/api';
@@ -12,6 +11,7 @@ import { Icon } from './src/components';
 
 import LoginScreen        from './src/screens/LoginScreen';
 import RegisterScreen     from './src/screens/RegisterScreen';
+import HomeScreen         from './src/screens/HomeScreen';
 import DashboardScreen    from './src/screens/DashboardScreen';
 import AirReadingsScreen  from './src/screens/AirReadingsScreen';
 import { SensorsScreen }  from './src/screens/SensorsScreen';
@@ -20,7 +20,6 @@ import CountriesScreen    from './src/screens/CountriesScreen';
 import CitiesScreen       from './src/screens/CitiesScreen';
 import AlertConfigsScreen from './src/screens/AlertConfigsScreen';
 import UsersScreen        from './src/screens/UsersScreen';
-import OnboardingScreen   from './src/screens/OnboardingScreen';
 
 import { colors } from './src/theme';
 
@@ -62,7 +61,8 @@ function AuthNavigator() {
 function DashboardStack() {
   return (
     <Stack.Navigator screenOptions={stackOpts}>
-      <Stack.Screen name="Dashboard"   component={DashboardScreen}   options={{ title: 'AirWatch' }} />
+      <Stack.Screen name="Home"        component={HomeScreen}        options={{ title: 'AirWatch' }} />
+      <Stack.Screen name="Dashboard"   component={DashboardScreen}   options={{ title: 'Monitor' }} />
       <Stack.Screen name="AirReadings" component={AirReadingsScreen} options={{ title: 'Leituras de Ar' }} />
       <Stack.Screen name="Sensors"     component={SensorsScreen}     options={{ title: 'Sensores' }} />
       <Stack.Screen name="AlertEvents" component={AlertEventsScreen} options={{ title: 'Eventos de Alerta' }} />
@@ -195,26 +195,14 @@ function AppNavigator() {
 
 function RootNavigator() {
   const { token, ready } = useAuth();
-  const [onboarding, setOnboarding] = React.useState(null);
-
   React.useEffect(() => { if (token) setAuthToken(token); }, [token]);
-
-  React.useEffect(() => {
-    AsyncStorage.getItem('onboarding_done').then(v => setOnboarding(v === '1'));
-  }, []);
-
-  if (!ready || onboarding === null) {
+  if (!ready) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
-
-  if (!onboarding) {
-    return <OnboardingScreen onDone={() => setOnboarding(true)} />;
-  }
-
   return token ? <AppNavigator /> : <AuthNavigator />;
 }
 
