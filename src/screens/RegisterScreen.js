@@ -5,6 +5,7 @@ import { AirInput, AirButton } from '../components';
 import { colors, spacing, radius } from '../theme';
 
 export default function RegisterScreen({ navigation }) {
+  const [name,     setName]     = useState('');
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
   const [confirm,  setConfirm]  = useState('');
@@ -13,6 +14,7 @@ export default function RegisterScreen({ navigation }) {
 
   const validate = () => {
     const e = {};
+    if (!name.trim())               e.name     = 'Nome obrigatório';
     if (!email.trim())              e.email    = 'E-mail obrigatório';
     else if (!email.includes('@'))  e.email    = 'E-mail inválido';
     if (!password.trim())           e.password = 'Senha obrigatória';
@@ -27,7 +29,7 @@ export default function RegisterScreen({ navigation }) {
     if (!validate()) return;
     try {
       setLoading(true);
-      await authService.register({ email: email.trim(), password });
+      await authService.register({ name: name.trim(), email: email.trim(), password });
       Alert.alert('Conta criada!', 'Faça login para continuar.', [
         { text: 'OK', onPress: () => navigation.navigate('Login') },
       ]);
@@ -45,6 +47,14 @@ export default function RegisterScreen({ navigation }) {
         <Text style={s.subtitle}>Preencha os dados para se cadastrar na plataforma</Text>
 
         <View style={s.form}>
+          <AirInput
+            label="Nome completo"
+            value={name}
+            onChangeText={setName}
+            placeholder="Seu nome"
+            autoCapitalize="words"
+            error={errors.name}
+          />
           <AirInput
             label="E-mail"
             value={email}
