@@ -13,10 +13,8 @@ RM: 565422
 Felipe Kirschner Modesto
 RM: 561810
 
-
-## Vídeo de Demonstração
-
-[Assista no YouTube]([https://youtube.com/watch?v=WZ0OUt1f8Cc])
+## Video de Demonstração
+[https://youtu.be/VETzkKojZaA?si=BLVaojFXzyI3AQso](https://www.youtube.com/watch?v=WZ0OUt1f8Cc)
 
 ## Descrição da Solução
 
